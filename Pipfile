@@ -1,0 +1,13 @@
+[[source]]
+name = "pypi"
+verify_ssl = true
+url = "https://pypi.org/simple"
+
+[packages]
+python-telegram-bot = "~=10.1.0"
+configparser = "~=3.5.0"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"
