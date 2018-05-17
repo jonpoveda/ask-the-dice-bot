@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+""" Bot module """
+
 import argparse
 import logging
 
