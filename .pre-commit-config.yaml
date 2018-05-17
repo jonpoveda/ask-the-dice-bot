@@ -1,0 +1,46 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v1.2.3
+  hooks:
+  - id: check-added-large-files
+    args: ['--maxkb=40']
+  - id: check-ast
+  - id: check-builtin-literals
+  - id: check-byte-order-marker
+  - id: check-docstring-first
+  - id: check-json
+  - id: check-merge-conflict
+  - id: detect-aws-credentials
+  - id: detect-private-key
+  - id: double-quote-string-fixer
+  - id: end-of-file-fixer
+  - id: fix-encoding-pragma
+  - id: mixed-line-ending
+    args: ['--fix=lf']
+  - id: name-tests-test
+    args: ['--django']
+  - id: no-commit-to-branch
+    args: ['-b master']
+  - id: trailing-whitespace
+  - id: requirements-txt-fixer
+
+    # To be checked
+  - id: autopep8-wrapper
+  # flake8 complains about unused import when using static typing
+#  - id: flake8
+
+# There is a fix of lost compatibility with pre-commit in:
+# b57843b0b874df1d16eb0bef00b868792cb245c2 but autoupdate does not work without
+# --bleeding-edge. So a fork is used meanwhile
+- repo: git://github.com/FalconSocial/pre-commit-python-sorter
+  sha: b57843b0b874df1d16eb0bef00b868792cb245c2
+  hooks:
+  - id: python-import-sorter
+    args: ['--silent-overwrite']
+
+- repo: git@github.com:coldnight/pre-commit-pylint.git
+  rev: v0.0.3
+  hooks:
+  - id: pylint-py3k
+  - id: pylint-score-limit
+    args: ['--limit=9', '--rcfile=./.pylintrc']
