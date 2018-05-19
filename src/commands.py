@@ -2,10 +2,11 @@
 """ Define BOT's commands """
 import logging
 from random import randrange
+# Configure a logging tool
+from typing import Iterable
 
 from telegram.ext import CommandHandler
 
-# Configure a logging tool
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO)
@@ -17,14 +18,40 @@ def _start(bot, update):
                      text="I'm the DiceBot, please ask me to do a roll!")
 
 
-def roll_parser(args: str = '1d10') -> int:
-    return randrange(1, 10)
+def roll_parser(expression: str) -> Iterable[int]:
+    """ Parse and expression into number of dice and die type
+
+    Args:
+        expression: follows the prototype `5d10`
+
+    Returns:
+        a list of results, one per each die
+    """
+    n_dice, die_type = expression.split('d')
+    n_dice = int(n_dice)
+    die_type = int(die_type)
+    return [die_roller(die_type) for _ in range(n_dice)]
+
+
+def die_roller(die_type: int = 10) -> int:
+    """ Rolls a die with
+
+    Args:
+        die_type: number of faces of the die
+
+    Returns:
+        the result of the die rolling
+
+    Notes:
+         counts from 1 to ``type``
+    """
+    return randrange(1, die_type)
 
 
 def _roll(bot, update):
     logging.info('[CMD] roll')
     args = '1d10'
-    result = roll_parser(args)
+    result = list(roll_parser(args))
     bot.send_message(chat_id=update.message.chat_id,
                      text=f'You roll [{args}]: {result}')
 
