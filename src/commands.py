@@ -33,7 +33,7 @@ def roll_parser(expression: str) -> Iterable[int]:
     return [die_roller(die_type) for _ in range(n_dice)]
 
 
-def die_roller(die_type: int = 10) -> int:
+def die_roller(die_type: int) -> int:
     """ Rolls a die with
 
     Args:
