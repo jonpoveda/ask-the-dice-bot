@@ -2,19 +2,25 @@
 """ Bot module """
 
 import argparse
+import commands
 import logging
 
 import telegram
-from telegram.ext import CommandHandler
 from telegram.ext import Updater
 
 
 def run(updater: Updater):
-    # Connect bot
+    """ Connects bot """
     updater.start_polling()
 
 
 def configure(token: str):
+    """ Configures the bot """
+    # Configure a logging tool
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        level=logging.INFO)
+
     # Load secret token
     bot = telegram.Bot(token=token)
     info = bot.get_me()
@@ -23,19 +29,10 @@ def configure(token: str):
     updater = Updater(token)
     dispatcher = updater.dispatcher
 
-    # Configure a logging tool
-    logging.basicConfig(
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        level=logging.INFO)
-
-    # Define commands
-    def start(bot, update):
-        bot.send_message(chat_id=update.message.chat_id,
-                         text="I'm the DiceBot, please ask me to do a roll!")
-
     # Add command handlers
-    start_handler = CommandHandler('start', start)
-    dispatcher.add_handler(start_handler)
+    for handler in commands.get_all_handlers():
+        dispatcher.add_handler(handler)
+
     return updater, info
 
 
@@ -50,10 +47,14 @@ def main():
     arguments = parser.parse_args()
 
     # Run bot
+
     updater, info = configure(arguments.token)
+
     if arguments.info:
-        print(info)
+        logging.info(info)
     else:
+        logging.debug(info)
+        logging.info('[Run] Connecting bot')
         run(updater)
 
 
