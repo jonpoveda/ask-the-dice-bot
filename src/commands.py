@@ -45,19 +45,21 @@ def die_roller(die_type: int) -> int:
     Notes:
          counts from 1 to ``type``
     """
-    return randrange(1, die_type)
+    return randrange(1, die_type+1)
 
 
-def _roll(bot, update):
-    logging.info('[CMD] roll')
-    args = '1d10'
-    result = list(roll_parser(args))
+def _roll(bot, update, args):
+    logging.info(f'[CMD] roll with {args}')
+    if not args:
+        args = ['1d10']
+    result = list(roll_parser(args[0]))
     bot.send_message(chat_id=update.message.chat_id,
-                     text=f'You roll [{args}]: {result}')
+                     text=f'You roll [{args[0]}]: {result}')
 
 
 START_HANDLER = CommandHandler('start', _start)
-ROLL_HANDLER = CommandHandler('roll', _roll)
+ROLL_HANDLER = CommandHandler('roll', 
+_roll, pass_args=True)
 
 
 def get_all_handlers():
