@@ -27,9 +27,14 @@ def roll_parser(expression: str) -> Iterable[int]:
     Returns:
         a list of results, one per each die
     """
-    n_dice, die_type = expression.split('d')
-    n_dice = int(n_dice)
-    die_type = int(die_type)
+    try:
+        n_dice, die_type = expression.split('d')
+        n_dice = int(n_dice)
+        die_type = int(die_type)
+    except ValueError:
+        #return "That's not a dice, try again"
+        return []
+
     return [die_roller(die_type) for _ in range(n_dice)]
 
 
@@ -53,9 +58,12 @@ def _roll(bot, update, args):
     if not args:
         args = ['1d10']
     result = list(roll_parser(args[0]))
-    bot.send_message(chat_id=update.message.chat_id,
+    if result:
+        bot.send_message(chat_id=update.message.chat_id,
                      text=f'You roll [{args[0]}]: {result}')
-
+    else: 
+        bot.send_message(chat_id=update.message.chat_id,
+                     text=f'This is not a valid roll. Try again')
 
 START_HANDLER = CommandHandler('start', _start)
 ROLL_HANDLER = CommandHandler('roll', 
